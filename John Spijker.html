@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- ============ HEAD: information for the browser, not visible on the page ============ -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>John Spijker – Singer-Songwriter</title>
+  <meta name="description" content="John Spijker is a singer-songwriter from Amstelveen. Listen to his music, check out upcoming gigs and sign the guestbook.">
+
+  <!-- Fonts from Google Fonts: Fraunces (warm serif for headings) + Inter (clean text) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ============ CSS: the styling ============
+       Colours are stored as "variables" here, so you can change
+       the whole colour scheme in one place. */
+    :root {
+      --cream:      #FBF5EC;   /* page background */
+      --sand:       #F3E6D3;   /* alternate section background */
+      --brown:      #3B2A20;   /* main text */
+      --brown-soft: #6E5646;   /* secondary text */
+      --orange:     #D9622B;   /* accent – a nod to the orange in the old logo */
+      --orange-dark:#B54E1F;
+      --radius:     18px;      /* how rounded the corners are */
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }          /* smooth scrolling when clicking menu links */
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--cream);
+      color: var(--brown);
+      line-height: 1.7;
+    }
+
+    h1, h2, h3 { font-family: 'Fraunces', serif; line-height: 1.15; }
+    h2 { font-size: clamp(2rem, 5vw, 2.8rem); margin-bottom: 1.2rem; }
+    a  { color: var(--orange); }
+
+    .container { max-width: 1050px; margin: 0 auto; padding: 0 1.5rem; }
+    section    { padding: 5.5rem 0; }
+    .alt       { background: var(--sand); }
+    .label     { text-transform: uppercase; letter-spacing: .15em; font-size: .78rem;
+                 font-weight: 600; color: var(--orange); margin-bottom: .6rem; }
+
+    /* ---------- Navigation bar ---------- */
+    nav {
+      position: sticky; top: 0; z-index: 10;
+      background: rgba(251, 245, 236, .92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(59, 42, 32, .08);
+    }
+    nav .container { display: flex; justify-content: space-between; align-items: center; height: 68px; }
+    .logo { font-family: 'Fraunces', serif; font-size: 1.4rem; font-weight: 700;
+            text-decoration: none; color: var(--brown); }
+    .logo span { color: var(--orange); }
+    .menu { display: flex; gap: 1.6rem; list-style: none; }
+    .menu a { text-decoration: none; color: var(--brown); font-weight: 500; font-size: .95rem; }
+    .menu a:hover { color: var(--orange); }
+
+    /* ---------- Hero (the big opening section) ---------- */
+    .hero { padding: 6rem 0 5rem; }
+    .hero .container { display: grid; grid-template-columns: 1.1fr .9fr; gap: 3.5rem; align-items: center; }
+    .hero h1 { font-size: clamp(3rem, 8vw, 5.2rem); margin-bottom: 1rem; }
+    .hero h1 span { color: var(--orange); }
+    .hero p { font-size: 1.15rem; color: var(--brown-soft); max-width: 30rem; margin-bottom: 2rem; }
+
+    .hero-photo {
+      aspect-ratio: 4 / 5; border-radius: var(--radius);
+      /* Placeholder: replace with a real photo (see the comment in the HTML below) */
+      background: linear-gradient(150deg, #E9A66B, var(--orange) 55%, #7A3416);
+      background-size: cover; background-position: center;
+      box-shadow: 0 25px 50px -20px rgba(122, 52, 22, .45);
+    }
+
+    .btn {
+      display: inline-block; padding: .85rem 1.6rem; border-radius: 999px;
+      font-weight: 600; text-decoration: none; transition: .2s;
+    }
+    .btn-primary { background: var(--orange); color: white; }
+    .btn-primary:hover { background: var(--orange-dark); }
+    .btn-outline { border: 2px solid var(--brown); color: var(--brown); margin-left: .6rem; }
+    .btn-outline:hover { background: var(--brown); color: var(--cream); }
+
+    /* ---------- About ---------- */
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+    .about-grid p { margin-bottom: 1rem; }
+    .highlights { list-style: none; }
+    .highlights li { padding: .9rem 0; border-bottom: 1px solid rgba(59, 42, 32, .12); }
+    .highlights strong { display: block; font-family: 'Fraunces', serif; font-size: 1.1rem; }
+    .highlights span { color: var(--brown-soft); font-size: .92rem; }
+
+    /* ---------- Music ---------- */
+    .spotify { border-radius: var(--radius); overflow: hidden; margin-top: 1.5rem; }
+
+    /* ---------- Gigs ---------- */
+    .gig {
+      display: grid; grid-template-columns: 110px 1fr auto; gap: 1.5rem; align-items: center;
+      background: white; border-radius: var(--radius); padding: 1.3rem 1.6rem; margin-bottom: .9rem;
+    }
+    .gig .date { font-family: 'Fraunces', serif; font-size: 1.5rem; font-weight: 700; color: var(--orange); }
+    .gig .where { color: var(--brown-soft); font-size: .92rem; }
+    .gig .note { font-size: .85rem; background: var(--sand); padding: .3rem .8rem; border-radius: 999px; }
+
+    /* ---------- Photos ---------- */
+    .photos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0 2rem; }
+    .photos figure {
+      aspect-ratio: 1; border-radius: var(--radius); overflow: hidden; position: relative;
+      background: linear-gradient(135deg, #E4C9A8, #C98B5E);
+    }
+    .photos img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .photos figcaption {
+      position: absolute; bottom: 0; left: 0; right: 0; padding: .7rem 1rem;
+      color: white; font-size: .85rem;
+      background: linear-gradient(transparent, rgba(0, 0, 0, .55));
+    }
+
+    /* ---------- Guestbook ---------- */
+    .guestbook-box { background: white; border-radius: var(--radius); padding: 2rem; margin-top: 1.5rem; }
+
+    /* ---------- Contact ---------- */
+    .contact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1.5rem; }
+    .contact-card { background: white; border-radius: var(--radius); padding: 1.6rem; }
+    .contact-card h3 { font-size: 1.15rem; margin-bottom: .4rem; }
+    .contact-card a { font-weight: 600; text-decoration: none; }
+
+    footer { background: var(--brown); color: var(--sand); text-align: center; padding: 2.5rem 1rem; font-size: .9rem; }
+    footer a { color: var(--sand); margin: 0 .6rem; }
+
+    /* ---------- Phones and small screens ----------
+       Everything inside this block only applies when the screen is narrower than 800px */
+    @media (max-width: 800px) {
+      .menu { display: none; }   /* hide the menu on phones to keep it clean */
+      .hero .container, .about-grid, .contact-grid { grid-template-columns: 1fr; }
+      .hero { padding-top: 3rem; }
+      .hero-photo { max-width: 380px; }
+      .photos { grid-template-columns: repeat(2, 1fr); }
+      .gig { grid-template-columns: 1fr; gap: .3rem; }
+      .btn-outline { margin: .6rem 0 0; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ============ BODY: everything visible on the page ============ -->
+
+  <!-- Navigation bar: the links jump to the sections with the matching id -->
+  <nav>
+    <div class="container">
+      <a href="#top" class="logo">john<span>spijker</span></a>
+      <ul class="menu">
+        <li><a href="#about">About</a></li>
+        <li><a href="#music">Music</a></li>
+        <li><a href="#gigs">Gigs</a></li>
+        <li><a href="#photos">Photos</a></li>
+        <li><a href="#guestbook">Guestbook</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <header class="hero" id="top">
+    <div class="container">
+      <div>
+        <p class="label">Singer-songwriter · Amstelveen</p>
+        <h1>John <span>Spijker</span></h1>
+        <p>Honest songs, an acoustic guitar and a lot of joy on stage. Welcome – have a listen, come to a gig, and sign my guestbook!</p>
+        <a href="#music" class="btn btn-primary">Listen now</a>
+        <a href="#guestbook" class="btn btn-outline">Sign the guestbook</a>
+      </div>
+      <!-- TO ADD A PHOTO: upload it to your repository (e.g. images/john.jpg), then change this line to:
+           <div class="hero-photo" style="background-image: url('images/john.jpg')"></div> -->
+      <div class="hero-photo" role="img" aria-label="Photo of John Spijker"></div>
+    </div>
+  </header>
+
+  <!-- ===== ABOUT ===== -->
+  <section class="alt" id="about">
+    <div class="container about-grid">
+      <div>
+        <p class="label">About</p>
+        <h2>From choir boy to Paradiso</h2>
+        <p>I started out as a choir boy and took up drumming lessons at ten. After my high school band I became lead singer of the rock band Apple, and today I front the cover band The Peachkings, playing parties and festivals across the country.</p>
+        <p>But writing my own songs is what I love most – it's a real and ongoing source of joy in my life. Ever since the Amsterdam singer-songwriter competition <em>Mooie Noten</em> in 2005, I've been playing my own songs everywhere, for everyone.</p>
+        <p><em>Influences: Prince, Stevie Wonder, The Beatles, Led Zeppelin, James Taylor, Van Halen.</em></p>
+      </div>
+      <ul class="highlights">
+        <li><strong>Paradiso, Amsterdam</strong><span>Semi-finals of Mooie Noten, 2005</span></li>
+        <li><strong>Melkweg, Amsterdam</strong><span>Opening act for ALO (Animal Liberation Orchestra), 2006</span></li>
+        <li><strong>Support act</strong><span>For Flaco Jimenez, Bløf, De Kast, Di-rect, Volumia and 16 Down</span></li>
+        <li><strong>Live &amp; Acoustic at P60</strong><span>Debut EP, out now on Spotify</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== MUSIC: Spotify player ===== -->
+  <section id="music">
+    <div class="container">
+      <p class="label">Music</p>
+      <h2>Listen on Spotify</h2>
+      <p>My EP <em>Live &amp; Acoustic at P60</em> and new releases.</p>
+      <div class="spotify">
+        <iframe src="https://open.spotify.com/embed/artist/0MF0vWXnb5v1WFrduMNMM4?utm_source=generator&theme=0"
+                width="100%" height="380" frameborder="0" loading="lazy"
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                title="John Spijker on Spotify"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== GIGS ===== -->
+  <section class="alt" id="gigs">
+    <div class="container">
+      <p class="label">Live</p>
+      <h2>Upcoming gigs</h2>
+      <!-- TO ADD A GIG: copy one <div class="gig"> ... </div> block and change the text -->
+      <div class="gig">
+        <div class="date">TBA</div>
+        <div><strong>New dates coming soon</strong><div class="where">Follow Instagram for the latest news</div></div>
+        <div class="note">Stay tuned</div>
+      </div>
+      <p style="margin-top:1.5rem">Want to book John for your party or venue? <a href="#contact">Get in touch</a>.</p>
+    </div>
+  </section>
+
+  <!-- ===== PHOTOS ===== -->
+  <section id="photos">
+    <div class="container">
+      <p class="label">Photos</p>
+      <h2>On stage</h2>
+      <!-- TO ADD PHOTOS: upload them to an "images" folder in your repository,
+           then put an <img> inside each figure, e.g.:
+           <figure><img src="images/paradiso-2005.jpg" alt="John at Paradiso"><figcaption>Paradiso, 2005</figcaption></figure> -->
+      <div class="photos">
+        <figure><figcaption>Café P60, 2015</figcaption></figure>
+        <figure><figcaption>Melkweg, 2006</figcaption></figure>
+        <figure><figcaption>Paradiso, 2005</figcaption></figure>
+      </div>
+      <a href="https://www.instagram.com/john_spijker/" class="btn btn-primary" target="_blank" rel="noopener">More photos on Instagram</a>
+    </div>
+  </section>
+
+  <!-- ===== GUESTBOOK (powered by Cusdis) =====
+       To activate it:
+       1. Sign up for free at https://cusdis.com and click "New website"
+       2. Copy your "App ID"
+       3. Replace YOUR-APP-ID below with it
+       New messages only appear after John approves them – no more spam! -->
+  <section class="alt" id="guestbook">
+    <div class="container">
+      <p class="label">Guestbook</p>
+      <h2>Leave a message</h2>
+      <p>Been to a gig? Love a song? Write something in my guestbook – I read every message!</p>
+      <div class="guestbook-box">
+        <div id="cusdis_thread"
+             data-host="https://cusdis.com"
+             data-app-id="YOUR-APP-ID"
+             data-page-id="guestbook"
+             data-page-url="https://johnspijker.nl/#guestbook"
+             data-page-title="Guestbook"></div>
+        <script async defer src="https://cusdis.com/js/cusdis.es.js"></script>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CONTACT ===== -->
+  <section id="contact">
+    <div class="container">
+      <p class="label">Contact</p>
+      <h2>Bookings &amp; contact</h2>
+      <div class="contact-grid">
+        <div class="contact-card"><h3>Email</h3><a href="mailto:john@johnspijker.nl">john@johnspijker.nl</a></div>
+        <div class="contact-card"><h3>Phone</h3><a href="tel:+31651147791">+31 (0)6 511 477 91</a></div>
+        <div class="contact-card"><h3>Book via Gigstarter</h3><a href="https://www.gigstarter.nl/artists/john-spijker" target="_blank" rel="noopener">View profile →</a></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>
+      <a href="https://open.spotify.com/artist/0MF0vWXnb5v1WFrduMNMM4" target="_blank" rel="noopener">Spotify</a>
+      <a href="https://www.instagram.com/john_spijker/" target="_blank" rel="noopener">Instagram</a>
+      <a href="http://www.facebook.com/john.spijker.1" target="_blank" rel="noopener">Facebook</a>
+    </p>
+    <p style="margin-top:1rem">© John Spijker</p>
+  </footer>
+</body>
+</html>
