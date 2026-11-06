@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- ======================================================
+       HEAD = information for the browser (not shown on the page)
+       ====================================================== -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>John Spijker – Singer-songwriter</title>
+  <meta name="description" content="John Spijker is a singer-songwriter from Amstelveen. Listen to his songs, find his next gig and sign the guestbook.">
+
+  <!-- Fonts: Instrument Serif (big lettering) and Karla (reading text) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Karla:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ======================================================
+       CSS = how everything looks
+       All colours live here. Change one value → it changes everywhere.
+       ====================================================== */
+    :root {
+      --espresso: #1D110B;   /* page background */
+      --roast:    #2B1911;   /* panels and boxes */
+      --sunset:   #F0782F;   /* main accent: sunset orange */
+      --dusk:     #C2456B;   /* second accent: the pink-violet stage light */
+      --cream:    #F4E6D2;   /* text, and the paper guestbook */
+      --muted:    #BFA48B;   /* quieter text */
+      --line:     rgba(244, 230, 210, .14);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--espresso);
+      color: var(--cream);
+      font-family: 'Karla', sans-serif;
+      font-size: 1.0625rem;
+      line-height: 1.65;
+    }
+    a { color: var(--sunset); }
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--sunset); outline-offset: 3px; }
+    img { max-width: 100%; display: block; }
+
+    h1, h2, h3 { font-family: 'Instrument Serif', serif; font-weight: 400; line-height: 1.05; }
+    h2 { font-size: clamp(2.6rem, 6vw, 4.2rem); margin-bottom: 1.5rem; }
+
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+    section { padding: 6rem 0; }
+    .narrow { max-width: 38rem; }          /* keeps reading lines short and comfortable */
+    .quiet { color: var(--muted); }
+
+    /* ---------- Navigation ---------- */
+    nav {
+      position: absolute; top: 0; left: 0; right: 0; z-index: 5;
+      padding: 1.6rem 0;
+    }
+    nav .wrap { display: flex; justify-content: space-between; align-items: baseline; }
+    .home-link { font-family: 'Instrument Serif', serif; font-size: 1.5rem; color: var(--cream); text-decoration: none; }
+    .menu { display: flex; gap: 1.8rem; list-style: none; }
+    .menu a { color: var(--cream); text-decoration: none; font-size: .95rem; opacity: .85; }
+    .menu a:hover { opacity: 1; color: var(--sunset); }
+
+    /* ---------- HERO: the sunset ----------
+       The sun is a glowing circle that slowly rises behind the "horizon" (bottom edge). */
+    .hero {
+      position: relative; overflow: hidden;
+      min-height: 100vh; display: flex; align-items: flex-end;
+      padding: 0 0 4.5rem;
+      background: linear-gradient(to bottom, #120A06 0%, #2A140C 55%, #5A2414 100%);
+    }
+    .sun {
+      position: absolute; left: 50%; bottom: -34vmin;
+      width: 88vmin; height: 88vmin; border-radius: 50%;
+      transform: translateX(-10%);
+      background: radial-gradient(circle at 50% 45%, #FFC77A 0%, var(--sunset) 38%, var(--dusk) 70%, rgba(194, 69, 107, 0) 72%);
+      filter: blur(2px);
+      box-shadow: 0 0 140px 40px rgba(240, 120, 47, .35);
+      animation: rise 2.8s cubic-bezier(.2, .7, .2, 1) both;
+    }
+    @keyframes rise { from { transform: translate(-10%, 30%); opacity: .4; } to { transform: translate(-10%, 0); opacity: 1; } }
+    .horizon {
+      position: absolute; left: 0; right: 0; bottom: 0; height: 32%;
+      background: linear-gradient(to bottom, rgba(29, 17, 11, 0), var(--espresso) 85%);
+    }
+    .hero .wrap { position: relative; z-index: 2; width: 100%; }
+    .hero h1 {
+      font-size: clamp(4.5rem, 17vw, 13rem);
+      line-height: .86; letter-spacing: -.02em;
+      color: var(--cream);
+      text-shadow: 0 4px 40px rgba(29, 17, 11, .5);
+    }
+    .hero h1 em { font-style: italic; display: block; padding-left: .55em; }
+    .hero p { max-width: 30rem; margin: 2rem 0 2.2rem; font-size: 1.15rem; }
+
+    .btn {
+      display: inline-block; padding: .9rem 1.7rem; border-radius: 999px;
+      font-weight: 700; text-decoration: none; font-size: .98rem;
+      transition: background .2s, color .2s;
+    }
+    .btn-sun { background: var(--sunset); color: var(--espresso); }
+    .btn-sun:hover { background: #FF9550; }
+    .btn-line { border: 1.5px solid var(--cream); color: var(--cream); margin-left: .5rem; }
+    .btn-line:hover { background: var(--cream); color: var(--espresso); }
+
+    /* ---------- BIO with photo ---------- */
+    #bio { overflow: hidden; }            /* keeps the photo glow from making the page scroll sideways */
+    .bio-grid { display: grid; grid-template-columns: 5fr 6fr; gap: 4.5rem; align-items: center; }
+    .photo-frame { position: relative; }
+    .photo-frame::before {                /* warm glow behind the photo, like stage light */
+      content: ""; position: absolute; inset: 8% -8% -6% 8%;
+      background: radial-gradient(circle, rgba(240, 120, 47, .45), rgba(194, 69, 107, .25) 50%, transparent 72%);
+      filter: blur(30px); z-index: 0;
+    }
+    .photo-frame img { position: relative; z-index: 1; width: 100%; border-radius: 4px; }
+    .photo-frame figcaption { position: relative; z-index: 1; margin-top: .8rem; font-size: .88rem; color: var(--muted); }
+    .bio p + p { margin-top: 1.1rem; }
+    .pull {
+      font-family: 'Instrument Serif', serif; font-style: italic;
+      font-size: clamp(1.6rem, 3vw, 2.1rem); line-height: 1.25;
+      color: var(--sunset); margin: 2rem 0;
+      padding-left: 1.2rem; border-left: 2px solid var(--dusk);
+    }
+    .milestones { list-style: none; margin-top: 2.2rem; border-top: 1px solid var(--line); }
+    .milestones li { display: grid; grid-template-columns: 4.5rem 1fr; gap: 1rem; padding: .85rem 0; border-bottom: 1px solid var(--line); }
+    .milestones b { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 1.35rem; color: var(--sunset); line-height: 1.2; }
+
+    /* ---------- Music ---------- */
+    .music { background: var(--roast); }
+    .player { margin-top: 2rem; border-radius: 12px; overflow: hidden; }
+
+    /* ---------- Gigs: a setlist-style list ---------- */
+    .gigs { list-style: none; border-top: 1px solid var(--line); margin-top: 1rem; }
+    .gigs li { display: grid; grid-template-columns: 7rem 1fr auto; gap: 1.5rem; align-items: baseline; padding: 1.3rem 0; border-bottom: 1px solid var(--line); }
+    .gigs .when { font-family: 'Instrument Serif', serif; font-size: 1.7rem; color: var(--sunset); }
+    .gigs .what { font-size: 1.15rem; }
+    .gigs .where { color: var(--muted); }
+
+    /* ---------- Photos ---------- */
+    .photos { background: var(--roast); }
+
+    /* ---------- Guestbook ---------- */
+    .paper {                                  /* the new guestbook looks like a cream paper page */
+      background: var(--cream); color: var(--espresso);
+      border-radius: 6px; padding: 2.2rem;
+      box-shadow: 0 30px 60px -30px rgba(0, 0, 0, .6);
+      margin-top: 2rem;
+    }
+    .paper a { color: #A8461B; }
+    .old-book h3 { font-size: 2.2rem; margin: 4.5rem 0 .4rem; }
+    .entries {
+      max-height: 680px; overflow-y: auto; margin-top: 1.5rem;
+      scrollbar-color: var(--sunset) var(--roast);   /* orange scrollbar */
+      border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+    }
+    .entry { padding: 1.4rem .2rem; border-bottom: 1px solid var(--line); max-width: 44rem; }
+    .entry:last-child { border-bottom: none; }
+    .entry p { white-space: pre-wrap; margin-bottom: .45rem; }    /* pre-wrap keeps every space exactly as typed */
+    .entry span { white-space: pre-wrap; font-family: 'Instrument Serif', serif; font-style: italic; font-size: 1.15rem; color: var(--sunset); }
+
+    /* ---------- Contact ---------- */
+    .contact { background: linear-gradient(to bottom, var(--espresso), #3A180F); }
+    .contact-links { list-style: none; margin-top: 1rem; }
+    .contact-links li { padding: .4rem 0; }
+    .contact-links a {
+      font-family: 'Instrument Serif', serif; font-size: clamp(1.8rem, 4.5vw, 3rem);
+      color: var(--cream); text-decoration: none;
+    }
+    .contact-links a:hover { color: var(--sunset); }
+    .contact-links small { display: block; font-size: .9rem; color: var(--muted); }
+
+    footer { padding: 2.5rem 0; border-top: 1px solid var(--line); font-size: .92rem; color: var(--muted); }
+    footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    footer a { color: var(--cream); margin-right: 1.4rem; }
+
+    /* ---------- Phones (screens narrower than 820px) ---------- */
+    @media (max-width: 820px) {
+      .menu { display: none; }
+      section { padding: 4.5rem 0; }
+      .bio-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .photo-frame { max-width: 420px; }
+      .sun { width: 120vmin; height: 120vmin; bottom: -62vmin; transform: translateX(-30%); }
+      @keyframes rise { from { transform: translate(-30%, 30%); opacity: .4; } to { transform: translate(-30%, 0); opacity: 1; } }
+      .gigs li { grid-template-columns: 1fr; gap: .2rem; }
+      .btn-line { margin: .7rem 0 0; }
+      .paper { padding: 1.4rem; }
+    }
+
+    /* People who turned off animations on their device won't see the sun move */
+    @media (prefers-reduced-motion: reduce) {
+      .sun { animation: none; }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ======================================================
+       BODY = everything you see on the page
+       ====================================================== -->
+
+  <nav aria-label="Main">
+    <div class="wrap">
+      <a href="#top" class="home-link">John Spijker</a>
+      <ul class="menu">
+        <li><a href="#bio">Bio</a></li>
+        <li><a href="#music">Music</a></li>
+        <li><a href="#gigs">Gigs</a></li>
+        <li><a href="#photos">Photos</a></li>
+        <li><a href="#guestbook">Guestbook</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ===== HERO: the sunset ===== -->
+  <header class="hero" id="top">
+    <div class="sun" aria-hidden="true"></div>
+    <div class="horizon" aria-hidden="true"></div>
+    <div class="wrap">
+      <h1>John<em>Spijker</em></h1>
+      <p>Singer-songwriter from Amstelveen. Songs written on the couch at home, played on every stage that will have them.</p>
+      <a href="#music" class="btn btn-sun">Listen to my songs</a>
+      <a href="#guestbook" class="btn btn-line">Sign the guestbook</a>
+    </div>
+  </header>
+
+  <!-- ===== BIO with John's photo =====
+       The photo file must be called john-live.jpg and sit next to index.html -->
+  <section id="bio">
+    <div class="wrap bio-grid">
+      <figure class="photo-frame">
+        <img src="john-live.jpg" alt="John Spijker singing and playing acoustic guitar under a spotlight" width="409" height="613">
+        <figcaption>Live on stage</figcaption>
+      </figure>
+      <div class="bio narrow">
+        <h2>From choir boy to Paradiso</h2>
+        <p>I was a choir boy when I took up drumming lessons, at the ripe age of ten. After my high school band I became lead singer of a rock band called Apple, and these days I sing and play acoustic guitar with my cover band, The Peachkings.</p>
+        <p>For years something held me back from playing my own songs on my own. Then I was invited to the Amsterdam singer-songwriter competition Mooie Noten in 2005, and I learned that performing solo is great.</p>
+        <p class="pull">Writing my own songs is a real and ongoing source of joy in my life.</p>
+        <p class="quiet">Heroes: Prince, Stevie Wonder, The Beatles, Led Zeppelin, James Taylor, Van Halen.</p>
+        <ul class="milestones">
+          <li><b>2005</b><span>Semi-finals of Mooie Noten in Paradiso, where almost all my heroes have played</span></li>
+          <li><b>2006</b><span>Opening act for Animal Liberation Orchestra in the Melkweg</span></li>
+          <li><b>2019</b><span>Debut EP <i>Live &amp; Acoustic at P60</i> released on Spotify</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== MUSIC: Spotify player ===== -->
+  <section class="music" id="music">
+    <div class="wrap">
+      <h2>Have a listen</h2>
+      <p class="narrow">My EP <i>Live &amp; Acoustic at P60</i> and everything new, straight from Spotify.</p>
+      <div class="player">
+        <iframe src="https://open.spotify.com/embed/artist/0MF0vWXnb5v1WFrduMNMM4?utm_source=generator&theme=0"
+                width="100%" height="400" frameborder="0" loading="lazy"
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                title="John Spijker on Spotify"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== GIGS =====
+       To add a gig: copy one <li> ... </li> line and change the text -->
+  <section id="gigs">
+    <div class="wrap">
+      <h2>Next gigs</h2>
+      <ul class="gigs">
+        <li><span class="when">Soon</span><span class="what">New dates are on the way</span><span class="where">Follow Instagram for news</span></li>
+      </ul>
+      <p class="quiet" style="margin-top:1.6rem">Want me to play at your party or venue? <a href="#contact">Get in touch</a>.</p>
+    </div>
+  </section>
+
+  <!-- ===== PHOTOS ===== -->
+  <section class="photos" id="photos">
+    <div class="wrap"><div class="narrow">
+      <h2>More photos</h2>
+      <p>New photos from gigs and the studio go up on Instagram first.</p>
+      <p style="margin-top:2rem"><a href="https://www.instagram.com/john_spijker/" class="btn btn-sun" target="_blank" rel="noopener">See my Instagram</a></p>
+    </div></div>
+  </section>
+
+  <!-- ===== GUESTBOOK =====
+       Part 1 – NEW messages with HTML Comment Box (they appear straight away):
+         1. Go to https://www.htmlcommentbox.com
+         2. Keep moderation OFF, click "Get the Code" and copy all of it
+         3. Replace the line <p>NEW-GUESTBOOK-CODE-HERE</p> below with that code
+       Part 2 – every message from the old guestbook, exactly as it was -->
+  <section id="guestbook">
+    <div class="wrap">
+      <h2>The guestbook</h2>
+      <p class="narrow">Been to a gig? Got a favourite song? Write it down here. I read every message.</p>
+      <div class="paper">
+        <p>NEW-GUESTBOOK-CODE-HERE</p>
+      </div>
+
+      <div class="old-book">
+        <h3>From the old guestbook</h3>
+        <p class="quiet">104 messages from the original johnspijker.nl. Scroll to read them all.</p>
+        <div class="entries">
+<article class="entry"><p>Hele goede website. Jou muziek is goed</p><span>— Menno</span></article>
+<article class="entry"><p>Hele mooi muziek</p><span>— anoniem</span></article>
+<article class="entry"><p>Goede website hoor alleen matige artiest<br><br><br>Groet bert</p><span>— Bert en ernie</span></article>
+<article class="entry"><p>J.O.H.N. S.P.I.J.K.E.R. = K.L.O.O.T.Z.A.K</p><span>— kt</span></article>
+<article class="entry"><p>Gozert! 'Easy Does It' is on its way! Geniet ervan.<br><br>Groet, Gijs</p><span>— Gijs Geluid (.nl)</span></article>
+<article class="entry"><p>Hoi John, dank je wel dat je me zo prachtig hebt toegezongen tijdens mijn afscheid van mijn team. Ik vond het al een bijzondere avond, maar jij hebt deze nog een stuk specialer gemaakt. Je hebt veel talent en passie en daar houd ik van. Veel succes en groetjes, Saskia</p><span>— saskian@microsoft.com</span></article>
+<article class="entry"><p>Hoi John<br>Ik vind je muziek echt <br>geweldig ik wens je veel succes<br>met je andere liedjes.</p><span>— Leerling van je vrouw (Soufian B)</span></article>
+<article class="entry"><p>finally I got to know yr web site so i can follow your music from italy!</p><span>— dani</span></article>
+<article class="entry"><p>Hallo John,<br><br>Toeval bestaat niet, nog een John....</p><span>— john.spijker@aon.at</span></article>
+<article class="entry"><p>Hoe is het met Joth? Enne, wanneer komt je cd uit?<br>Laat het me even weten.<br>Liefs,</p><span>— Mama</span></article>
+<article class="entry"><p>He John, <br><br>Beetje star struck! Lang geleden hebben wij samen gewerkt en toen wist ik al dat je het heel leuk gaat doen in de muziek. En het wordt alleen maar grootser!<br>Ik heb naar een aantal nummers geluisterd, en wat mij betreft sta je op dezelfde level als mijn idol John Mayer. but what's in the name?</p><span>— Claudia Idzardi</span></article>
+<article class="entry"><p>Hoi John,<br><br>Ik vind je muziek te gek!<br><br>wanneer komt je cd uit?</p><span>— anoniem</span></article>
+<article class="entry"><p>Ha John, Mooi nummer gisteren op de boot. Echt gaaf!<br>Tot een volgende keer,</p><span>— Gaston</span></article>
+<article class="entry"><p>Hi John, was goed en gezellig om je weer eens te spreken! Keep up the good work en wellicht zien we elkaar snel eens in the social club??? Ik hoor het graag! Later en alvast een fijn weekend!</p><span>— joost dobbe</span></article>
+<article class="entry"><p>Hee john,<br>Goede website man! Spreek je later,<br>Mars</p><span>— marcel@luntungan.nl</span></article>
+<article class="entry"><p>Hey John,<br><br>Te gek optreden in A'dam donderdag!<br>Echt super liedjes! mooie stem! <br>en een lekkere groove!<br>Ik hoop snel nog eens met je op het <br>zelfde podium te mogen staan!<br>Ga zo door!<br><br>Groet,<br>Frank van der star<br>(drummer Monsieur cannibale)</p><span>— frank@frankvanderstar.nl</span></article>
+<article class="entry"><p></p><span>— </span></article>
+<article class="entry"><p>Leuke website<br><br>Agnes</p><span>— zeugie@tiscali.nl</span></article>
+<article class="entry"><p>Eindelijk je site kunnen bekijken. Erg leuk!</p><span>— Petra Rijers   Zwolle</span></article>
+<article class="entry"><p>John, jou gisterenavond zien optreden bij "Mulligan's" en zeer geimponeerd door jouw stem! Machtig mooi man. Ook teksten en style muziek passen prima bij je. Zou je wel eens willen zien optreden met een goeie band, of liever nog een orkest, achter je. Dan krijgt jou geluid nog veel meer impact. Wellicht dat dat moment nog eens komt. Voorlopig hoop ik dat je mijn avond op 15 september a.s. mede tot een succes gaat maken. We zien elkaar. De "Oude" Rocker.</p><span>— Heike MÃ¼ller Smit</span></article>
+<article class="entry"><p>en dan toch je website gevonden! ziet er coolio uit. <br>Groeten,<br>Terence<br><br>check it out www.terencesamson.com</p><span>— terence@terencesamson.com</span></article>
+<article class="entry"><p>Hee wat leuk je eigen site. Mooie vormgeving ook. Hoe bevalt het vaderschaps.<br>Liefs je nicht Margreet</p><span>— anoniem</span></article>
+<article class="entry"><p>halllllllllllllllllllo</p><span>— anoniem</span></article>
+<article class="entry"><p>Leuk man!<br><br>Op naar de Prof!<br><br>Hein</p><span>— hein@spijker.nu</span></article>
+<article class="entry"><p>He John,<br><br>Ouwe gek!!<br>Leuk man dat je zo professioneel bezig bent met muziek.<br><br>Alles goed met je?<br>Ik hoor van m'n ouders af en toe wat.<br><br>Ik zag dat je binnenkort in Utrecht speelt.<br>Als het even kan dan zoek ik je op.<br><br>Groeten uit Soesterberg,<br><br>Je neef Joost</p><span>— J.spijker@talentenresult.nl</span></article>
+<article class="entry"><p>Johnnie, goed je effe te zien gisteren, lekker site en erg leuk te zien dat je zo je eigen weg blijft gaan - na mijn terugkeer uit t buitenland drinken we er eentje!</p><span>— Bas</span></article>
+<article class="entry"><p>Hey Kerel,<br>je weet het,  je bent van harte welkom in mijn musikale pub in Shanghai. <br>Ik zal een foto van je erin doen.Ik zie je snel in Live in China</p><span>— Laurent  www.piccone-sh.com</span></article>
+<article class="entry"><p>dus dat ding dat je deed toen je nog niet bij de supermannen was is geen gig?</p><span>— www.opscherp.org</span></article>
+<article class="entry"><p>He John!!<br>Ik wil je graag weer eens zien spelen en probeer er de 19e er bij te zijn in de social club..<br>Spreek je.<br>Eric Nootebos</p><span>— Eric Nootebos@yahoo.com</span></article>
+<article class="entry"><p>jo ik zit bij cathelijne in de klas en vette site<br><br>veel geluk nog laterzzzzzzzzzz!!!!!!!!!</p><span>— sean barry</span></article>
+<article class="entry"><p>Hallo John!<br>Ook jij bedankt voor de errug leuke avond in manifesto.Ik hoop dat je nog eens langskomt, ik heb er erg van genoten.<br>fijn weekend,<br><br>arwin</p><span>— arwint@hotmail.com</span></article>
+<article class="entry"><p>Zo Johnnie, geile site, goeie foto! Grussen, Sally (zonder eigen site)</p><span>— Sally</span></article>
+<article class="entry"><p>gamaarverderindemuziekendatkantoortabee</p><span>— sjoerd</span></article>
+<article class="entry"><p>jaja ik zag het weer die vingers in die grote gok van je, wat een held ben je toch........</p><span>— anoniem</span></article>
+<article class="entry"><p>Johnny's comin' to Amstelveen!<br>And I'll be there!<br>New Jersey RuLeS</p><span>— Billy the kid</span></article>
+<article class="entry"><p>Hee John!<br>Het genoegen was geheel wederzijds... Altijd weer<br>afwachten wat voor mede-vlees je in de kuip hebt op zo'n avond, maar we hebben ons prima vermaakt.<br>We komen elkaar vast wel weer eens tegen. Tot die tijd: succes met je muziek!<br>Jelmer - Stud Muffins</p><span>— jelmer@studmuffins.nl</span></article>
+<article class="entry"><p>Hey john, hier even een berichtje uit het zonnige Flevoland. We Hebben genoten van je optreden in kos. Ga zo door vriendelijke groet bart en dinja</p><span>— Bartdeveldvoetballer@hotmail.com</span></article>
+<article class="entry"><p>john,<br>je klonk goed gisteren in de melkweg.. we hoorden je voor het eerst en waren onder de indruk. ben je nog geboekt voor dat andere optreden?<br>hou je in de gaten, groeten simon</p><span>— jansensimon@gmail.com</span></article>
+<article class="entry"><p>hoi john!<br>goed gedaan gister..ontspannen en zuiver.<br>je 'hits' op de site zijn zeker al verdubbeld?<br><br>groetjes sandra</p><span>— sandra</span></article>
+<article class="entry"><p>Ik vond je vanavond hartstikke leuk spelen, goed dat er nog dergelijke musici in Nederland rond lopen. Prima stem en begeleiding van je zelf. Laat me via je site weten of je inmiddels een cd uit hebt.</p><span>— cluckhardt@hetnet.nl</span></article>
+<article class="entry"><p>ook helemaal geen gekke site...maar goed dat wist je al..heel veel succes morgenavond! ( gaat denk ik wel lukken om nog een liedje mee te pikken..) spreek je gauw . grt</p><span>— Harold</span></article>
+<article class="entry"><p>He die John<br>Ik wou je ff succes wensen voor woensdag. Tof man spelen in de melkweg. Wie weet komen wij met ons bandje ook eens zover, voor ons nog een beetje een droom om te verwezenlijken. Als het zo doorgaat kun je straks je eigen VIP-gastenlijst maken in plaats van er (inqognito) op te staan. Nogmaals erg tof voor je, ik vind het jammer dat ik er niet bij kan zijn woensdag. <br>Groetjes Ronny</p><span>— ronnygreve.fotowerk@home.nl</span></article>
+<article class="entry"><p>Ik zag dat je 2 augustus het voorprogramma van ALO in de Melkweg doet! Te gek! Ik ben er zeker bij!<br>Ik vond ALO namelijk ook te gek in het voorprogramma van Jack Johnson in de Heineken Music Hall.<br><br>Zet 'm op!<br><br>Groetjes, Suzanne</p><span>— Suzanne</span></article>
+<article class="entry"><p>Hey John,<br><br>Ik vond het een erg leuk optreden vorige week in Kultuurhuis Bosch. Als ik de tijd en wat geld vind kom ik volgende week ook even kijken in Camelot.<br><br>Groetjes Jelmer</p><span>— jaytiees@hotmail.com</span></article>
+<article class="entry"><p>New Jersey rocks! drinks this week!</p><span>— Billy the kid</span></article>
+<article class="entry"><p>Hoi!!!<br>Leuk optreden in de BG!! Klinkt allemaal erg leuk!! Zal volgende x in de auto terug wat vriendelijker tegen je doen!! <br>Maike</p><span>— mamamaike@gmail.com</span></article>
+<article class="entry"><p>Hi John,<br><br>Supergoed gedaan! Je kunt zo je eigen bedrijfje beginnen ;-) De dames hebben genoten en ik heb je website doorgestuurd. <br><br>Heel heel erg bedakt voor je komst op zo'n korte termijn en je perfecte prive-optreden!<br><br>mieke</p><span>— miekevandepol@hotmail.com</span></article>
+<article class="entry"><p>Hi John<br>Nu al zo blij dat je zaterdag voor ons gaat spelen!!je maakt mijn dag!</p><span>— Mieke!</span></article>
+<article class="entry"><p>Hey John, leuke liedjes heb je staan! Had je vrijdag gehoord in BG, klinkt echt goed, ben benieuwd naar een echte CD. Hier heb je ook een linkje van mijn bandje (herrie): www.pure-serenity.com<br>Seeya mate,<br>Gideon</p><span>— crappyanimations@hotmail.com</span></article>
+<article class="entry"><p>Dag turkse vriend</p><span>— groetjes Mohammed wortel</span></article>
+<article class="entry"><p>hey man<br><br>gezellig gisteren in de BG, kom ook een keer kijken als je met de band speelt....<br>liefs</p><span>— MJ        rincewind@wish.net</span></article>
+<article class="entry"><p>Hoi John<br>Als collega van Cathelijne dacht ik: leuk om eens uit te checken, dat was een goed idee! Mooie liedjes en teksten, vooral het eerste  - ik ben benieuwd naar je cd!</p><span>— Renske</span></article>
+<article class="entry"><p>HaI John,<br><br>Alhoewel ik zelf uit het CSNY-tijdperk stam, kan ik jouw muziek erg waarderen. Mocht je ooit een CD maken, dan zijn Rineke en ik natuurlijk de eersten die hem aanschaffen. In veel van de reacties lees ik dat je zo'n mooie jongen bent. Dat kan ik als aanstaande schoonvader natuurlijk moeilijk beoordelen. Blijf er echter maar in geloven, evenals in je talent.<br><br>Rob</p><span>— anoniem</span></article>
+<article class="entry"><p>fka john wanneer kom je lans met je gitaar he had  belooft groetjes mohamed</p><span>— crazypappie@hotmail.com</span></article>
+<article class="entry"><p>Hey John! Dat gaat al lekker, jij als vergane glorie gaat optreden in Zwolle in je favouriete tentje, vergane glorie voor al je vrinden.<br>Succes man!!<br>Zie je snel</p><span>— Handige Harry</span></article>
+<article class="entry"><p>Jah tegek, bedankt voor al je scheten, je grappen je gezelligheid maar bovenal je optreden!</p><span>— Mark Dokter</span></article>
+<article class="entry"><p>Geweldig optreden gister in Villa 29<br>Ik heb genoten</p><span>— Kai</span></article>
+<article class="entry"><p>John,<br>Wat ben je toch een moooooie jongen!! <br>Ga zo door man! Spreek je snel weer. <br>Emrah</p><span>— emragg@hotmail.com</span></article>
+<article class="entry"><p>He John, lang niet meer gezien gehoord of gesproken, maar geloof dat ik vanavond weer de kans krijg in de Sugar Factory... wordt vast leuk! heb ook een vraag voor jou: Wat vind jij het mooiste liefdeslied ever?? x Lot</p><span>— llorijn@xs4all.nl</span></article>
+<article class="entry"><p>Heel veel succes komende 4 februari in de Villa 29 te Barneveld!!</p><span>— mark_dokter@hotmail.com</span></article>
+<article class="entry"><p>Zeg Johnnie-boy! Groovy pics, dat heeft Cathje goed gedaan! Waarom is die site van jou in het Engels? Heb je nu al last van ster-allures? Maar goed, go boy!<br><br>Gr. Bas (collega van cath)</p><span>— b.waijers@chello.nl</span></article>
+<article class="entry"><p>Hey Mr Spiekrie, heb je al gekeken op www.emagazine.nl, je staat er mooi op!! pagina 55/56/57...... het gaat goed he! Leuk stukje ook, ben weer trots op je.<br><br>Dikke Kus,<br>Kojak</p><span>— anoniem</span></article>
+<article class="entry"><p>...hopelijk verdien je nu een paar stuivers om je achterbakse kontje te krabben! Juhhhhhwel!</p><span>— anoniem</span></article>
+<article class="entry"><p>Hey ouwe droefsnoet hoe is het met je schrale kontje? Jij bent goed bezig hoor, ik blijf het altijd maar onfrisse lui vinden hoor die guitar boys!</p><span>— Hakkie (@)</span></article>
+<article class="entry"><p>fijne kerst met je vrouw!<br>Je hebt een 'super-voice'........<br>groet, james</p><span>— anoniem</span></article>
+<article class="entry"><p>Ola! dat stukje op spunk of iets dergelijks legt je ook al geen windeiren. Ik zag u op de rockkaraoke op die bewuste avond en ben er van overtuigd dat het met je eigen muziek ook wel snor zit! Rock aan!</p><span>— Charlotte</span></article>
+<article class="entry"><p>Hey!<br><br>Ik zag je afgelopen zondag optreden in de Heksenketel in Roosendaal en ik was diep onder de indruk!<br>Zo mooi!<br><br>Ik hoop dat ik je nog eens mag beluisteren.<br><br>=)<br><br>Marleen.</p><span>— mad_leen@hotmail.com</span></article>
+<article class="entry"><p>He John<br><br>Hoorde dat je Arnon had gesproken. Mooie www hoor ! <br>Irwin Budding, van de economie studie...</p><span>— Irwin Budding</span></article>
+<article class="entry"><p>He John ik kan je nummers al bijna helemaal meezingen... Da's een goed teken volgens mij... X Fan</p><span>— anoniem</span></article>
+<article class="entry"><p>Ik had al een keer van je gehoord maar de reclame die voor je op spunk is gemaakt liet me toch maar even hier kijken.<br>ziet er lekker profi uit, verwacht snel een doorbraak;)<br>xx</p><span>— T.</span></article>
+<article class="entry"><p>Je bent en blijft een mooooooooooooie jongen. Namens de pcc uit 2002. Succes verder, je bent heeeeel goed bezig Marcel.</p><span>— Marcelamsterdam@gmail.com</span></article>
+<article class="entry"><p>Leuk hoor, de gigs stromen maar binnen. Ik denk dat je a la Tom Jones veel toegeworpen zal krijgen, hoewel je meer van panties houdt ;-). Succes verder. Floris.</p><span>— anoniem</span></article>
+<article class="entry"><p>Gozer,<br>Dat is een te gek site! Jij weet dst ik een van je best fan bent. Ik geloof in jou. Maar je weet het: it's a long way to the top..if you wanna rock'n'roll</p><span>— Laurent -Shanghai China</span></article>
+<article class="entry"><p>Hey gosawdude! Coole site en een hoop gigs, dus das helemaal goed. Zie je snel weer!<br>Tjuus</p><span>— David</span></article>
+<article class="entry"><p>Gaat lekker met de gigs...<br>Goed voor je!</p><span>— Tomster</span></article>
+<article class="entry"><p>Lekker bezig of niet?<br>x Caroline</p><span>— anoniem</span></article>
+<article class="entry"><p>Whoahhhhhh! Zop Hop! Tadeng!<br>You da man! Was gaaf in de Winston!</p><span>— Ramon@vogelvlucht.net</span></article>
+<article class="entry"><p>Johnnyboy, volgens mij zag ik een bericht voorbij flitsen in mijn Inbox aangaande je optredens dit weekend. Hope you had fun! Ondertussen is de nieuwe Stevie Wonder binnen :-) No worries, regelen we! Gr, Jer.</p><span>— Jerry</span></article>
+<article class="entry"><p>Hoi John,<br><br>Die twee nummertjes klinken lekker. Ik ben aangenaam verrast. Had ik niet verwacht. Ik herkende je bijna niet. Ga zo door. We spreken snel een keer af. @</p><span>— Edje</span></article>
+<article class="entry"><p>Hey man! Two flies in 1 clap! Congrats, sie you soon. Amen!<br><br>The Lord</p><span>— thelord@god.org</span></article>
+<article class="entry"><p>Hi John,<br>Nice site!  I never had the chance to tell you how much I liked your playing at the Mooie Noten semi-finals.  You were great and it made my not making the finals easier to bare! I was invited by a friend to attend the Merel Mooistra gig on the 13th and am delighted to find you're on the bill. . .<br>Veel Succes!</p><span>— elizabeth_mazzei@hotmail.com</span></article>
+<article class="entry"><p>Hi John,<br>Nice site!  I never had the chance to tell you how much I liked your playing at the Mooie Noten semi-finals.  You were great and it made my not making the finals easier to bare! I was invited by a friend to attend the Merel Mooistra gig on the 13th and am delighted to find you're on the bill. . .<br>Veel Succes!</p><span>— anoniem</span></article>
+<article class="entry"><p>Hallo lieve breur,<br>Vanzelfsprekend vind ik het echt helemaal fantastisch waar jij mee bezig bent. Ik kan niet wachten tot december! Zet h'm op! Heel veel liefs van Arda, Rupert en Juliette</p><span>— spykera@ul.ac.za</span></article>
+<article class="entry"><p>Ha monsieur Spijker! <br>Het is je dan toch gelukt! ben zo blij voor je! Zie dat je nog steeds onwijs goed eruit ziet en ben benieuwd hoe het met je gaat... stuur me een mailtje terug, zou ik leuk vinden!<br>Kom snel een keer bij je kijken.<br><br>Dikke kus van je ex-collega<br>Antoinetje</p><span>— Antoinette.Linterman@reebok.com</span></article>
+<article class="entry"><p>ik was erbij de EERSTE keer</p><span>— Theo</span></article>
+<article class="entry"><p>Tja,binnenkort is het natuurlijk niet meer te houden!Mooi allemaal...ik ga ook een vette site nemen! CELEBRATION,BITCHES!!</p><span>— Tobi-One-Kenobi</span></article>
+<article class="entry"><p>Bij zoveel romantiek horen mooie liedjes<br><br>x Sjef</p><span>— Sjefke</span></article>
+<article class="entry"><p>Bij mooie liedjes hoort een mooie site!<br><br>Dikke zoen, Cath</p><span>— Cathelijne</span></article>
+<article class="entry"><p>Gespot: John bij Andre Hazes.....<br>Vraagje, heb je tegewoordig ook al een bodyguard??<br><br>Groetjes</p><span>— simone</span></article>
+<article class="entry"><p>All,<br><br>Op Marktplaats staat een advertentie van iemand uit Hoorn (NH) die heeft alle cd's van de Peach Kings!! Voor een leuke prijs wil hij ze verkopen!  Kom snel, op = op<br><br>Groetjes<br><br>De Portier</p><span>— anoniem</span></article>
+<article class="entry"><p>Wanneer junnen we een cd'tje van je kopen?<br><br>Of zet anders in ieder geval meer mp3'tjes online...</p><span>— Kan niet wachten...</span></article>
+<article class="entry"><p>John, ben benieuwd of je nog single bent! Ik kan het me bijna niet voorstellen met zo'n mooie kop en dat lekkere figuur van je.. en dan ook nog die mooie stem! <br>Hoop dat je mij een reactie terugstuurd.<br><br>Tot snel<br><br>xxx Kim</p><span>— kimdejong77@hotmail.com</span></article>
+<article class="entry"><p>Hee Johny broccoli, Zal je volboeken in Veenendaal. Kinky hoor.<br><br>Eetse he</p><span>— Peter R. ( je vriend )</span></article>
+<article class="entry"><p>JOHN, WE HOUDEN VAN JE!<br>JOHN4EVER<br><br>JOKE&amp;MADELIEF</p><span>— JOKE</span></article>
+<article class="entry"><p>Hey John, zondag in Wormer!! Wij zijn van de partij.<br><br>Groetjes <br>Peter</p><span>— Peter</span></article>
+<article class="entry"><p>Toppie Joppie<br><br>xxx inge</p><span>— anoniem</span></article>
+<article class="entry"><p>Hey snelle boy!<br>Je bent en blijft een Toppertje<br><br>xxx Inge de Bruijn</p><span>— Ingedebruyn@zwemschooleindhoven.nl</span></article>
+<article class="entry"><p>Hey mooie Jongen! <br><br>Je doet het erg goed als solo artiest! Mijn vriendin en ik vinden dat je heel erg goed bezig bent! We waren afgelopen zondag in Sally's O'Brien en ik moet toegeven zowel je peronal act als de hoofdact met de boys waren super! <br>Hopelijk kom je snel weer optreden.<br><br>p.s We konden merken dat het Volle Maan was.... wooow<br><br>Hele dikke kus <br>Heidi</p><span>— anoniem</span></article>
+<article class="entry"><p>He Manneke! <br><br>Super man, eindelijk je eigen site! <br>Ziet er goed uit! <br><br>Vooral je optreden in Zwaag (Hoorn) was erg goed! De mensen hebben het er nog steeds over! <br><br>Heel veel succes de komende tijd, heb via via gehoord dat je ook binnenkort in de Wormer moet optreden! <br><br>Groetjes</p><span>— De PORTIER</span></article>
+<article class="entry"><p>HÃƒÂ© Johnny,<br><br>Alles goed..??!</p><span>— T.</span></article>
+<article class="entry"><p>Ha Gozerdude<br><br>Ziet er goed uit hoor!!!</p><span>— Tom</span></article>
+<article class="entry"><p>John, afgelopen zaterdag heb ik erg genoten van je eigen liedjes in de Sally's. Tuurlijk de Peachkings zijn ook te gek, maar eigen liedjes zijn toch eigen! Groetjes, X</p><span>— anoniem</span></article>
+<article class="entry"><p>Tof!!!!</p><span>— anoniem</span></article>
+<article class="entry"><p>Hallo, dit het nieuwe gastenboek!!!</p><span>— anoniem</span></article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CONTACT ===== -->
+  <section class="contact" id="contact">
+    <div class="wrap">
+      <h2>Book me or say hello</h2>
+      <ul class="contact-links">
+        <li><a href="mailto:john@johnspijker.nl">john@johnspijker.nl</a><small>Email</small></li>
+        <li><a href="tel:+31651147791">+31 (0)6 511 477 91</a><small>Phone</small></li>
+        <li><a href="https://www.gigstarter.nl/artists/john-spijker" target="_blank" rel="noopener">Gigstarter</a><small>Book a gig</small></li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <p>
+        <a href="https://open.spotify.com/artist/0MF0vWXnb5v1WFrduMNMM4" target="_blank" rel="noopener">Spotify</a>
+        <a href="https://www.instagram.com/john_spijker/" target="_blank" rel="noopener">Instagram</a>
+        <a href="http://www.facebook.com/john.spijker.1" target="_blank" rel="noopener">Facebook</a>
+      </p>
+      <p>© John Spijker</p>
+    </div>
+  </footer>
+</body>
+</html>
